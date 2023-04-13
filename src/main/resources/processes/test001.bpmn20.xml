@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="支永林测试流程" name="支永林测试流程" isExecutable="true">
+    <startEvent id="sid-aaf1d13b-b405-4964-8551-a4f8c5513a33" name="启动">
+      <extensionElements>
+        <activiti:formProperty id="days" variable="days"></activiti:formProperty>
+        <activiti:formProperty id="Property 2"></activiti:formProperty>
+      </extensionElements>
+    </startEvent>
+    <userTask id="sid-afcf1bc8-8f4d-474c-b89e-120e3afec116" name="多人或签">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="user">
+        <completionCondition>${nrOfCompletedInstances&gt;=1}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <endEvent id="sid-9eff7651-20fc-4097-8998-6a4e36fccd75"></endEvent>
+    <userTask id="usertask1" name="会签节点" activiti:assignee="${leader}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="leader">
+        <completionCondition>${nrOfCompletedInstances/nrOfInstances ==1}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="sid-aaf1d13b-b405-4964-8551-a4f8c5513a33" targetRef="usertask2"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="sid-afcf1bc8-8f4d-474c-b89e-120e3afec116" targetRef="usertask1"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="usertask1" targetRef="exclusivegateway1"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="sid-9eff7651-20fc-4097-8998-6a4e36fccd75">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='审核通过'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="sid-afcf1bc8-8f4d-474c-b89e-120e3afec116">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result!='审核通过'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="usertask2" name="多人或签-分配" activiti:assignee="${user}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="user">
+        <completionCondition>${nrOfCompletedInstances&gt;=1}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <sequenceFlow id="flow6" sourceRef="usertask2" targetRef="sid-afcf1bc8-8f4d-474c-b89e-120e3afec116"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_支永林测试流程">
+    <bpmndi:BPMNPlane bpmnElement="支永林测试流程" id="BPMNPlane_支永林测试流程">
+      <bpmndi:BPMNShape bpmnElement="sid-aaf1d13b-b405-4964-8551-a4f8c5513a33" id="BPMNShape_sid-aaf1d13b-b405-4964-8551-a4f8c5513a33">
+        <omgdc:Bounds height="35.0" width="35.0" x="1.0" y="147.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-afcf1bc8-8f4d-474c-b89e-120e3afec116" id="BPMNShape_sid-afcf1bc8-8f4d-474c-b89e-120e3afec116">
+        <omgdc:Bounds height="80.0" width="100.0" x="210.0" y="126.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9eff7651-20fc-4097-8998-6a4e36fccd75" id="BPMNShape_sid-9eff7651-20fc-4097-8998-6a4e36fccd75">
+        <omgdc:Bounds height="35.0" width="35.0" x="830.0" y="148.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="410.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="650.0" y="145.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="70.0" y="137.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="36.0" y="164.0"></omgdi:waypoint>
+        <omgdi:waypoint x="70.0" y="164.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="310.0" y="166.0"></omgdi:waypoint>
+        <omgdi:waypoint x="410.0" y="165.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="515.0" y="165.0"></omgdi:waypoint>
+        <omgdi:waypoint x="650.0" y="165.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="690.0" y="165.0"></omgdi:waypoint>
+        <omgdi:waypoint x="830.0" y="165.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="670.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="670.0" y="62.0"></omgdi:waypoint>
+        <omgdi:waypoint x="492.0" y="62.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="62.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="126.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="175.0" y="164.0"></omgdi:waypoint>
+        <omgdi:waypoint x="210.0" y="166.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
